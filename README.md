@@ -2,7 +2,7 @@
 
 Develop tools and environment:
 
-PHP + mySQL
+HTML + PHP + MySQL
 
 Description:
 
