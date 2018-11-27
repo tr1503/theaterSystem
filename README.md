@@ -14,3 +14,9 @@ Our movie theater system will include:
 •	The view of profits per month and the rank of film market  
 
 This database system has two entries. The entry of managers allows them to access the database to check the reservation status of seats and the entry of customers allows them to read the list of films, reserve seats and purchase merchandise.  
+
+Team member:
+
+Hanlin,Ye hay55@pitt.edu  
+Youwei,Ma yom26@pitt.edu  
+Ziyao,Wu ziw33@pitt.edu
