@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `movie` (
   `title` varchar(30) NOT NULL,
   `director` varchar(20) NOT NULL,
   `rating` double NOT NULL,
+  `price` double NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
