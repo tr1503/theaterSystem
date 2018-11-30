@@ -7,11 +7,6 @@ general terminal - login
         <meta charset="UTF-8">
         <title>HYZtheater</title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <style>
-            form-control {
-                width: auto;
-            }
-        </style>
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
