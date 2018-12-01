@@ -15,7 +15,7 @@ Our movie theater system will include:
 
 This database system has two entries. The entry of managers allows them to access the database to check the reservation status of seats and the entry of customers allows them to read the list of films, reserve seats and purchase merchandise.  
 
-<img src="https://github.com/tr1503/theaterSystem/blob/master/design/E-R%20diagram.png">
+<img src="https://github.com/tr1503/theaterSystem/blob/master/design/ERD.png">
 
 Team member:
 
