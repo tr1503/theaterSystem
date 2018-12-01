@@ -30,7 +30,7 @@ general terminal - login
                     </div>     
                     <div style="padding-top:30px" class="panel-body" >
                         <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>              
-                        <form id="loginform" class="form-horizontal" role="form">                                    
+                        <form id="loginform" class="form-horizontal" role="form" method="post" action="loginProcess.php">                                    
                             <div style="margin-bottom: 25px" class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                 <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username">                                        
@@ -42,14 +42,14 @@ general terminal - login
                             </div>
                             <div style="margin-top:10px" class="form-group">
                                 <div class="col-sm-12 controls">
-                                    <a id="btn-login" href="#" class="btn btn-success">Login</a>
+                                    <input id="btn-login" class="btn btn-success" type="submit" value="Login">
                                 </div>
                             </div>
                                 <div class="form-group">
                                     <div class="col-md-12 control">
                                         <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                                             Don't have an account! 
-                                        <a href="signUp.php" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                                        <a href="signUp.php">
                                             Sign Up Here
                                         </a>
                                      </div>

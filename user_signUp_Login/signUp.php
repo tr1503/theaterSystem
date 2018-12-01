@@ -29,7 +29,7 @@ general terminal - sign up
                         <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="login.php" onclick="$('#signupbox').hide(); $('#loginbox').show()">Login</a></div>
                     </div>  
                     <div class="panel-body" >
-                        <form id="signupform" class="form-horizontal" role="form">
+                        <form id="signupform" class="form-horizontal" role="form" action="signUpProcess.php" method="post">
                             <div id="signupalert" style="display:none" class="alert alert-danger">
                                 <p>Error:</p>
                                     <span></span>
@@ -54,7 +54,7 @@ general terminal - sign up
                             </div>
                             <div class="form-group">                                    
                                 <div class="col-md-offset-3 col-md-9">
-                                    <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Register</button>
+                                    <input id="btn-signup" type="submit" class="btn btn-info" value="Register">
                                 </div>
                             </div>
                         </form>
