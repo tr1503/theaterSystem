@@ -1,6 +1,6 @@
 1. import database
 2. import database input values
-3. download all if this file
+3. download this file
 ===========================================
 12-01：
 修改了登录验证方式；
