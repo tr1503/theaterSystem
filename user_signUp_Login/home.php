@@ -52,11 +52,6 @@ general terminal
         </nav>
         <div class="listLink container">
             <div class="row">
-                <!-- <div class="col-lg-6 col-sm-12">
-                    <div class="thumbnail">
-                        <a href="merchandiseList.php"><img src="https://images-na.ssl-images-amazon.com/images/I/61ADQzFODSL._SX466_.jpg"></a>
-                    </div>
-                </div> -->
                 <div class="col-sm-12 col-lg-6">
                     <div class="thumbnail">
                         <img src="https://i5.walmartimages.com/asr/fa64ba40-2883-427d-95d3-1c0843cbffe2_1.c46da19e133159e365982a08602a5a77.jpeg" width="60%">
