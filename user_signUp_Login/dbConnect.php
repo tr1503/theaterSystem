@@ -4,7 +4,7 @@ function dbConnect(){
     //configure database connection credential
     $server = 'localhost';
     $username = 'root';
-    $password = 'mysql';
+    $password = '294737157';
     $database = 'movie_theater';
     
     //start connection, use database 'movie_theater'

@@ -1,5 +1,5 @@
 <?php
-//get login input
+//process the login request before booking a seat, will return to the movie detail page
 $username = $_POST['username'];
 $password = $_POST['password'];
 
@@ -15,8 +15,10 @@ if ($username == '' || $password == ''){
         session_start();
         $_SESSION['status'] = true;
         $_SESSION['loginUser'] = $username;
-        echo '<script>alert("Log in Successfully!"); window.location.href="./home.php";</script>';
+        //return to the movie detail page
+        echo '<script>alert("Log in Successfully!"); history.go(-2);</script>';
     }else{
         echo '<script>alert("Please try again."); history.go(-1);</script>';
     }
 }
+
