@@ -1,0 +1,60 @@
+/* general layout */
+#nav{
+    
+}
+#searchTitle{
+    
+}
+#slide{
+    
+}
+#listLink{
+    position: relative;
+    top: 500px;
+}
+
+/* slides layout */
+#frame{
+    position: absolute;
+    width:360px;
+    height:480px;
+    overflow:hidden;
+    border-radius:5px;
+}
+#dis{
+    position:absolute;
+    left:-10px;
+    top:420px;
+    opacity: 0.8;
+}
+#dis li{
+    display:inline-block;
+    width:280px;
+    height:30px;
+    margin:0 36px;
+    float:left;
+    text-align:center;
+    color:#ff6600;
+    font-size: 20px;
+    border-radius:10px;
+    background:#000;
+}
+#photos img{
+    float:left;
+    width:360px;
+    height:480px;
+}
+#photos {  
+    position: absolute;
+    z-index:9;  
+    width: calc(360px * 5);
+}        
+/*set auto-play */
+.play{ animation: ma 12s ease-out infinite alternate;}
+@keyframes ma {
+    0%,20% {        margin-left: 0px;       }
+    21%,40% {       margin-left: -360px;    }
+    41%,60% {       margin-left: -720px;    }
+    61%,80% {       margin-left: -1080px;    }
+    81%,100% {      margin-left: -1440px;    }
+ }
