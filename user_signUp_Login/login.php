@@ -40,6 +40,14 @@ general terminal - login
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
                             </div>
+                            <div class="input-group">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="loginPort" value="user">User<br>
+                                        <input type="radio" name="loginPort" value="employee">Employee<br>
+                                    </label>
+                                </div>
+                            </div>
                             <div style="margin-top:10px" class="form-group">
                                 <div class="col-sm-12 controls">
                                     <input id="btn-login" class="btn btn-success" type="submit" value="Login">
