@@ -4,6 +4,7 @@ general - aud list
 -->
 <html>
     <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <meta charset="UTF-8">
         <title>HYZtheater</title>
         <?php 
@@ -12,55 +13,66 @@ general - aud list
         ?>
     </head>
     <body>
-        <div id="nav">
-            <div id="homepageLink">
-                <ul>
-                    <li><a href="home.php">HYZtheater</a></li>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="empolyeeHome.php">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="navbar-text">
+                        <?php 
+                            session_start(); 
+                            echo $_SESSION['loginUser'];
+                        ?>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="logoutProcess.php">Logout</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Jobs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="addMovie.php">Add new movies</a>
+                            <a class="dropdown-item" href="#">Manage merchandise</a>
+                            <a class="dropdown-item" href="auditoriumList.php">Manage screening</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
-            <div id="signLink">
-                <ul>
-                    <?php
-                        //access to superglobal session, in other words, check any logined user
-                        session_start(); 
-                        //if there is a login user display username, otherwise show login link
-                        if (isset($_SESSION['status']) && $_SESSION['status']==true){
-                            echo '<li>'.$_SESSION['loginUser'].'</li>';
-                            echo '<li><a href="logoutProcess.php">Log Out</a></li>';
-                        }else{
-                            echo '<li><a href="login.php">Login</a></li>';
-                            echo '<li><a href="signUp.php">Sign Up</a></li>';
-                        }
-                    ?>
-                </ul>
-            </div>
-        </div>
-        <div id="audList">
+        </nav>
+        <div id="audList" class="container">
             <?php
             $sql = "SELECT * FROM auditorium";
             $result = mysql_query($sql);
             ?>
-            <table border="1">
+            <table class="table">
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
                     <th>Capacity</th>
                 </tr>
                 <?php 
-                $i = 0;
                 while($row = mysql_fetch_array($result)){ 
-                    $i++;
-                    ?>
+                ?>
                 <tr>
-                    <td><?php echo $i ?></td>
                     <td><?php echo $row['name'] ?></td>
                     <td><?php echo $row['seats_no'] ?></td>
+                    <td>
+                        <form method="get" action="manageScreening.php">
+                            <input type="hidden" name="aud_id" value="<?php echo $row['id']?>">
+                            <input type="submit" class="btn btn-success" value="Add">
+                        </form>
+                    </td>
                 </tr>
                 <?php } ?>
             </table>
         </div> 
         <div id="return">
-            <input type='button' value='Return' onclick='history.go(-1)'>
+            <input type='button' class="btn btn-primary" value='Return' onclick='history.go(-1)'>
         </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
 </html>

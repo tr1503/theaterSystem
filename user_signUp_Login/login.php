@@ -43,7 +43,7 @@ general terminal - login
                             <div class="input-group">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="loginPort" value="user">User<br>
+                                        <input type="radio" checked="checked" name="loginPort" value="user">User<br>
                                         <input type="radio" name="loginPort" value="employee">Employee<br>
                                     </label>
                                 </div>

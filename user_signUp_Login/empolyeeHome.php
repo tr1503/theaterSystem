@@ -19,7 +19,7 @@
                     ?>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="lougoutProcess.php">Logout</a>
+                    <a class="nav-link active" href="logoutProcess.php">Logout</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -28,7 +28,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="addMovie.php">Add new movies</a>
                         <a class="dropdown-item" href="#">Manage merchandise</a>
-                        <a class="dropdown-item" href="#">Manage screening</a>
+                        <a class="dropdown-item" href="auditoriumList.php">Manage screening</a>
                     </div>
                 </li>
             </ul>
