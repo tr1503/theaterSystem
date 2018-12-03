@@ -35,7 +35,7 @@ general - aud list
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="addMovie.php">Add new movies</a>
-                            <a class="dropdown-item" href="#">Manage merchandise</a>
+                            <a class="dropdown-item" href="manageMerchandise.php">Manage merchandise</a>
                             <a class="dropdown-item" href="auditoriumList.php">Manage screening</a>
                         </div>
                     </li>

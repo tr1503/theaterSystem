@@ -4,7 +4,7 @@
     $rating = $_POST['rating'];
     $price = $_POST['price'];
     if ($title == '' || $director == '' || $rating == '' || $price == ''){
-        echo '<script>alert("Please enter your username and password."); history.go(-1);</script>';
+        echo '<script>alert("Please enter your movie information."); history.go(-1);</script>';
     } else {
         require_once 'dbConnect.php';
         dbConnect();
