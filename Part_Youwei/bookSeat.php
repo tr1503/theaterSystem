@@ -53,7 +53,7 @@ user - book seat
                     <td><?php echo $row['start_time'] ?></td>
                     <td><?php echo $row['end_time'] ?></td>
                     <td>
-                        <form method="get" action="chooseSeat_Mer.php">
+                        <form method="get" action="chooseSeat.php">
                             <input type="hidden" name="scr_id" value="<?php echo $row['id'] ?>">
                             <input type="submit" value="Book">
                         </form>
