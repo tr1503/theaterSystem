@@ -6,11 +6,9 @@ user - choose screening
     <head>
         <meta charset="UTF-8">
         <title>HYZtheater</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="css/seatLayout.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <!--script src="https://code.jquery.com/jquery-3.3.1.min.js"></script--> 
         <?php
             session_start();
             //get auditorium id from screening
@@ -18,14 +16,9 @@ user - choose screening
             
             require_once 'dbConnect.php';
             dbConnect();
-            
+            //get auditorium id
             $screen = mysql_fetch_array(mysql_query("SELECT aud_id FROM screening WHERE id = '$scr_id'"));
-            $aud_id = $screen['aud_id'];
-            
-            /*get seat layout information from seat*/
-            $getLayout = "SELECT * FROM seat WHERE aud_id='$aud_id'";
-            $resultLayout = mysql_query($getLayout);
-            //$layout = mysql_fetch_array(resultLayout);
+            $aud_id = $screen['aud_id'];            
             
             //seat number per row
             $getSeatNo = "SELECT number FROM seat WHERE aud_id = '$aud_id' AND row = '1'";
@@ -64,13 +57,14 @@ user - choose screening
                         session_start(); 
                         //if there is a login user display username, otherwise show login link
                         if ($_SESSION['status']==true){
-                            echo '<li class="navbar-text">'.$_SESSION['loginUser'].'</li>';
+                            echo '<li class="nav-item active"><a class="nav-link" href="#">'.$_SESSION['loginUser'].'</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="logoutProcess.php">Log Out</a></li>';
-                            echo '<li class="nav-item active"><a class="nav-link" href="movieList.php">Reserve</a></li>';
                         }else{
                             echo '<li class="nav-item active"><a class="nav-link" href="login.php">Login</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="signUp.php">Sign Up</a></li>';
                         }
+                        echo '<li class="nav-item active"><a class="nav-link" href="movieList.php">Movies</a></li>';
+                        echo '<li class="nav-item active"><a class="nav-link" href="merchandiseList.php">Merchandises</a></li>';
                     ?>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" method="get" action="searchMovie.php">
@@ -78,51 +72,52 @@ user - choose screening
                     <input type="submit" class="btn btn-outline-success my-2 my-sm-0" value="search">
                 </form>
             </div>
-        </nav> 
+        </nav>
         <div id="seatLayout">
+            <form method="get" action="confirm.php">
             <div id="screen"></div>
             <div id="seats">
+                
                 <?php 
                 //output each row of seats
                 for($i=0;$i<count($rowNo);$i++){ 
                     echo '<div class="seatsRow">';
                     //for each row, output each seat
-                    for($j=0;$j<count($colNo);$j++){
-                        echo '<div class="seat"></div>';
-                    }
+                    for($j=0;$j<count($colNo);$j++){ 
+                        //get seat id for each seat
+                        $getSeatId = "SELECT id FROM seat WHERE aud_id='$aud_id' AND row='$rowNo[$i]' AND number='$colNo[$j]'";
+                        $resultSeatId = mysql_query($getSeatId);
+                        $seatIdRow = mysql_fetch_array($resultSeatId);
+                        ?>
+                        <div class="seat">
+                            <input type="checkbox" name="seatId[]" value="<?php echo $seatIdRow['id'] ?>">
+                            <label><?php echo $rowNo[$i] ?>-<?php echo $colNo[$j] ?></label>
+                            <input type="hidden" name="moviePrice" value="<?php echo $moviePriceRow['price'] ?>">
+                            <input type="hidden" name="scr_id" value="<?php echo $scr_id ?>">
+                        </div>
+                    <?php }
                     echo '</div>';
                 }
-                ?>
+                ?>                                    
             </div>
-            <div id="booking">
-                <div class="booking_left">Choose seat:
-                    <div id="selected_seat"></div>                    
-                    <div id="errMsg"></div>
-                </div>
-                <div class="booking_right">
-                    <div id="total">Total price：<span> 0 </span></div>
-                </div>                
-             </div>
-            <?php 
-            $row_s =  "<script>document.ready(row_s)</script>";
-            echo $row_s;
-                    ?>
-            <div id="button">
-                <button id="bookNowButton" type="button" >Book Now</button>
-            </div>
+        <input type="submit" class="btn btn-success" value="Book Seat" >
+            </form>
         </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
     <script>
     //Reference: http://www.zhimengzhe.com/HTMLjiaocheng/338198.html
+    /* NOT USED IN THIS PROJECT
     $(document).ready(function(){
 
         var seat_num ;
         var total_bill      = 0 ; //set default price
-        var pricePerTicked  = <?php echo $moviePriceRow['price'] ?>; //price of the movie
+        var pricePerTicked  = 10; //price of the movie
         var maximumSeats    =   1; //seats limitation
 
-        $('#bookNowButton').hide(); //hide the book button if no seats is selected
-
+        
         $('.seat').each(function() {       
             var column_num = parseInt( $(this).index() ) + 1; //set column
             var row_num = parseInt( $(this).parent().index() )+1; //set row
@@ -130,7 +125,8 @@ user - choose screening
             $(this).text(seat_num); //value seat_num
             $(this).addClass("seat"+seat_num);  //apply css color setting
         });
-        
+        */
+        /*
         $("#seats .seat").click(function() {  
             $('#errMsg').html('');
             if($(this).hasClass('select')){ //check if is chosen
@@ -165,6 +161,7 @@ user - choose screening
             total_bill = $(".your_selected_seat").length * pricePerTicked;
             $('#total > span').html(total_bill);
         });
+        */
     });
 </script>
 </html>

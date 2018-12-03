@@ -31,13 +31,14 @@ general terminal - search
                         session_start(); 
                         //if there is a login user display username, otherwise show login link
                         if ($_SESSION['status']==true){
-                            echo '<li class="navbar-text">'.$_SESSION['loginUser'].'</li>';
+                            echo '<li class="nav-item active"><a class="nav-link" href="#">'.$_SESSION['loginUser'].'</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="logoutProcess.php">Log Out</a></li>';
-                            echo '<li class="nav-item active"><a class="nav-link" href="movieList.php">Reserve</a></li>';
                         }else{
                             echo '<li class="nav-item active"><a class="nav-link" href="login.php">Login</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="signUp.php">Sign Up</a></li>';
                         }
+                        echo '<li class="nav-item active"><a class="nav-link" href="movieList.php">Movies</a></li>';
+                        echo '<li class="nav-item active"><a class="nav-link" href="merchandiseList.php">Merchandises</a></li>';
                     ?>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" method="get" action="searchMovie.php">

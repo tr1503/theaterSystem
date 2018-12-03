@@ -1,29 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Employee Home</title>
+    <title>Manage Reservation</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <?php 
+        require_once 'dbConnect.php';
+        dbConnect();
+        $aud_id = $_GET['audId'];
+    ?>
 </head>
 <body>
-    <?php
-        //configure database connection credential
-        session_start(); 
-        $employeeName = $_SESSION['loginUser'];
-        $server = 'localhost';
-        $username = 'root';
-        $password = 'mysql';
-        $database = 'movie_theater';    
-        //start connection, use database 'movie_theater'
-        $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
-        mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
-        $sql = "SELECT aud_id FROM employee WHERE name='$employeeName'";
-        $result = mysql_query($sql);
-        while($row = mysql_fetch_array($result)) {
-            $aud_id = $row['aud_id'];
-        }
-        mysql_free_result($result);
-        mysql_close($conn);
-    ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="empolyeeHome.php">Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +19,7 @@
             <ul class="navbar-nav">
                 <li class="navbar-text">
                     <?php 
+                        session_start(); 
                         echo $_SESSION['loginUser'];
                     ?>
                 </li>
@@ -47,7 +34,6 @@
                         <a class="dropdown-item" href="addMovie.php">Add new movies</a>
                         <a class="dropdown-item" href="manageMerchandise.php">Manage merchandise</a>
                         <a class="dropdown-item" href="auditoriumList.php">Manage screening</a>
-                        <a class="dropdown-item" href="manageReservation.php?audId=<?php echo $aud_id?>">Manage Reservation</a>
                     </div>
                 </li>
             </ul>
@@ -58,36 +44,32 @@
         </div>
     </nav>
     <?php
-        //configure database connection credential
-        $server = 'localhost';
-        $username = 'root';
-        $password = 'mysql';
-        $database = 'movie_theater';    
-        //start connection, use database 'movie_theater'
-        $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
-        mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
-        $sql = "CALL topMovie()";
-        $top = mysql_query($sql);
+        $sql = "CALL showOrder('$aud_id')";
+        $result = mysql_query($sql);
     ?>
-    <div id="topMovies" class="container">
+    <div class="container">
         <table class="table">
             <tr>
-                <th>Movie</th>
-                <th>Reservation</th>
+                <th>Reservation ID</th>
+                <th>Payment</th>
+                <th></th>
             </tr>
             <?php 
-                while($row = mysql_fetch_array($top)){ 
+                while($row = mysql_fetch_array($result)){ 
             ?>
             <tr>
-                <td><?php echo $row['title'] ?></td>
-                <td><?php echo $row['reserve'] ?></td>
+                <td><?php echo $row['id'] ?></td>
+                <td><?php echo $row['movie_payment'] ?></td>
+                <td>
+                    <form method="get" action="processPaid.php">
+                        <input type="hidden" name="id" value="<?php echo $row['id']?>">
+                        <input type="submit" class="btn btn-success" value="Process">
+                    </form>
+                </td>
             </tr>
-            <?php 
-                } 
-                mysql_free_result($top);
-            ?>
+            <?php } ?>
         </table>
-    </div> 
+    </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

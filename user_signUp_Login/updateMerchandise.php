@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="empolyeeHome.php">Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -14,7 +14,6 @@
             <ul class="navbar-nav">
                 <li class="navbar-text">
                     <?php 
-                        session_start(); 
                         echo $_SESSION['loginUser'];
                     ?>
                 </li>
@@ -32,8 +31,12 @@
                     </div>
                 </li>
             </ul>
+            <form class="form-inline my-2 my-lg-0" method="get" action="searchMarket.php">
+                <input class="form-control mr-sm-2" type="search" name="title" placeholder="Search Movie Market" aria-label="Search">
+                <input type="submit" class="btn btn-outline-success my-2 my-sm-0" value="search">
+            </form>
         </div>
-    </nav> 
+    </nav>
     <?php
         session_start();
         $id = $_GET['id'];

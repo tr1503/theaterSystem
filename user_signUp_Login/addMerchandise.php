@@ -32,6 +32,10 @@
                     </div>
                 </li>
             </ul>
+            <form class="form-inline my-2 my-lg-0" method="get" action="searchMarket.php">
+                <input class="form-control mr-sm-2" type="search" name="title" placeholder="Search Movie Market" aria-label="Search">
+                <input type="submit" class="btn btn-outline-success my-2 my-sm-0" value="search">
+            </form>
         </div>
     </nav> 
     <form method="post" action="addMerchandiseProcess.php">
