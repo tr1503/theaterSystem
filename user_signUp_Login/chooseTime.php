@@ -17,7 +17,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="employeeHome.php">Dashboard</a>
+        <a class="navbar-brand" href="empolyeeHome.php">Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -62,12 +62,14 @@
             $movie_id = $value['id'];
         }
         $_SESSION['movie_id'] = $movie_id;
-        $start1 = $date." 08:00:00";
-        $start2 = $date." 13:00:00";
-        $start3 = $date." 20:00:00";
+        $start1 = $date." 09:00:00";
+        $start2 = $date." 14:00:00";
+        $start3 = $date." 18:00:00";
+        $start4 = $date." 21:00:00";
         $sql1 = "CALL searchFreeTime('$start1','$aud_id')";
         $sql2 = "CALL searchFreeTime('$start2','$aud_id')";
         $sql3 = "CALL searchFreeTime('$start3','$aud_id')";
+        $sql4 = "CALL searchFreeTime('$start4','$aud_id')";
         $time1 = mysql_query($sql1);
     ?>
     <div class="container">
@@ -88,7 +90,7 @@
                 }
                 mysql_free_result($time1);
                 mysql_close($conn);
-                $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
+                $conn = mysql_connect($server,$username,$password);
                 mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
                 $time2 = mysql_query($sql2);
                 if (mysql_num_rows($time2) == 0) {
@@ -101,7 +103,7 @@
                 }
                 mysql_free_result($time2);
                 mysql_close($conn);
-                $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
+                $conn = mysql_connect($server,$username,$password);
                 mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
                 $time3 = mysql_query($sql3);
                 if (mysql_num_rows($time3) == 0) {
@@ -113,6 +115,18 @@
                     echo "</tr>";
                 }
                 mysql_free_result($time3);
+                mysql_close($conn);
+                $conn = mysql_connect($server,$username,$password);
+                mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
+                $time4 = mysql_query($sql4);
+                if (mysql_num_rows($time4) == 0) {
+                    echo "<tr>";
+                    echo "<td>".$start4."</td>";
+                    $end4 = date('Y-m-d H:i:s', strtotime($start4) + $duration*60);
+                    echo "<td>".$end4."</td>";
+                    echo '<td><form method="get" action="addScreening.php"><input type="hidden" name="start" value="'.$start4.'"><input type="hidden" name="end" value="'.$end4.'"><input type="submit" class="btn btn-info" value="Choose"></form></td>';
+                    echo "</tr>";
+                }
             ?>
         </table>    
     </div>
