@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 02, 2018 at 11:36 AM
+-- Generation Time: Dec 03, 2018 at 12:34 PM
 -- Server version: 5.7.11-log
 -- PHP Version: 5.6.30
 
@@ -85,16 +85,19 @@ INSERT INTO `merchandise` (`id`, `name`, `price`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `merchandise_reserve`
+-- Table structure for table `merchandise_order`
 --
 
-CREATE TABLE IF NOT EXISTS `merchandise_reserve` (
+CREATE TABLE IF NOT EXISTS `merchandise_order` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
+  `user_id` int(5) NOT NULL,
   `merchandise_id` int(2) DEFAULT NULL,
-  `reserve_id` int(5) DEFAULT NULL,
+  `amount` int(3) NOT NULL DEFAULT '0',
+  `price` double NOT NULL,
+  `order_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `merchandise_id` (`merchandise_id`),
-  KEY `reserve_id` (`reserve_id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -178,9 +181,8 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `scr_id` int(5) NOT NULL,
   `movie_payment` double NOT NULL,
-  `merchandise_payment` double DEFAULT NULL,
-  `total_payment` double NOT NULL,
   `paid` tinyint(1) NOT NULL,
+  `reserve_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `scr_id` (`scr_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -576,11 +578,10 @@ ALTER TABLE `employee`
   ADD CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`aud_id`) REFERENCES `auditorium` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `merchandise_reserve`
+-- Constraints for table `merchandise_order`
 --
-ALTER TABLE `merchandise_reserve`
-  ADD CONSTRAINT `merchandise_reserve_ibfk_1` FOREIGN KEY (`merchandise_id`) REFERENCES `merchandise` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `merchandise_reserve_ibfk_2` FOREIGN KEY (`reserve_id`) REFERENCES `reservation` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `merchandise_order`
+  ADD CONSTRAINT `merchandise_order_ibfk_1` FOREIGN KEY (`merchandise_id`) REFERENCES `merchandise` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `reservation`
