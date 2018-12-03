@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2018 at 12:55 PM
+-- Generation Time: Dec 03, 2018 at 04:14 PM
 -- Server version: 5.7.11-log
 -- PHP Version: 5.6.30
 
@@ -187,7 +187,32 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   `reserve_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `scr_id` (`scr_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+
+--
+-- Dumping data for table `reservation`
+--
+
+INSERT INTO `reservation` (`id`, `scr_id`, `movie_payment`, `paid`, `reserve_time`) VALUES
+(1, 11, 10, 0, '2018-12-03 15:35:03'),
+(2, 23, 10, 0, '2018-12-03 15:38:03'),
+(3, 20, 20, 0, '2018-12-03 15:40:21'),
+(4, 20, 10, 0, '2018-12-03 15:40:39'),
+(5, 20, 10, 0, '2018-12-03 15:40:39'),
+(6, 20, 10, 0, '2018-12-03 15:43:26'),
+(7, 20, 10, 0, '2018-12-03 15:43:26'),
+(8, 20, 10, 0, '2018-12-03 15:43:26'),
+(9, 20, 10, 0, '2018-12-03 15:47:29'),
+(10, 20, 10, 0, '2018-12-03 15:47:29'),
+(11, 20, 10, 0, '2018-12-03 15:47:29'),
+(12, 20, 30, 0, '2018-12-03 15:51:07'),
+(13, 20, 30, 0, '2018-12-03 15:51:07'),
+(14, 20, 30, 0, '2018-12-03 15:51:07'),
+(15, 20, 30, 0, '2018-12-03 15:55:36'),
+(16, 20, 30, 0, '2018-12-03 15:56:52'),
+(17, 20, 20, 0, '2018-12-03 15:57:41'),
+(18, 1, 10, 0, '2018-12-03 16:01:37'),
+(19, 1, 10, 0, '2018-12-03 16:01:45');
 
 -- --------------------------------------------------------
 
@@ -529,7 +554,19 @@ CREATE TABLE IF NOT EXISTS `seat_reserve` (
   KEY `reserve_id` (`reserve_id`),
   KEY `seat_id` (`seat_id`),
   KEY `scr_id` (`scr_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+
+--
+-- Dumping data for table `seat_reserve`
+--
+
+INSERT INTO `seat_reserve` (`id`, `reserve_id`, `seat_id`, `scr_id`) VALUES
+(1, 6, 122, 20),
+(7, 16, 121, 20),
+(9, 16, 123, 20),
+(10, 17, 139, 20),
+(11, 17, 140, 20),
+(12, 18, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -567,7 +604,30 @@ CREATE TABLE IF NOT EXISTS `user_reserve` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `reserve_id` (`reserve_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+
+--
+-- Dumping data for table `user_reserve`
+--
+
+INSERT INTO `user_reserve` (`id`, `user_id`, `reserve_id`) VALUES
+(1, 1, 3),
+(2, 1, 4),
+(3, 1, 5),
+(4, 1, 6),
+(5, 1, 7),
+(6, 1, 8),
+(7, 1, 9),
+(8, 1, 10),
+(9, 1, 11),
+(10, 1, 12),
+(11, 1, 13),
+(12, 1, 14),
+(13, 1, 15),
+(14, 1, 16),
+(15, 1, 17),
+(16, 1, 18),
+(17, 1, 19);
 
 --
 -- Constraints for dumped tables
