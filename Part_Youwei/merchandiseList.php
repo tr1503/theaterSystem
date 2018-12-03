@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-general - movie list 50
+general - merchandise list
 -->
 <html>
     <head>
@@ -35,19 +35,16 @@ general - movie list 50
                 </ul>
             </div>
         </div>
-        <div id="movieList">
+        <div id="merList">
             <?php
-            $sql = "SELECT * FROM movie ORDER BY rating DESC";
+            $sql = "SELECT * FROM merchandise";
             $result = mysql_query($sql);
             ?>
             <table border="1">
                 <tr>
                     <th>#</th>
-                    <th>Title</th>
-                    <th>Director</th>
-                    <th>Rating</th>
+                    <th>Name</th>
                     <th>Price</th>
-                    <th></th>
                 </tr>
                 <?php 
                 $i = 0;
@@ -56,16 +53,8 @@ general - movie list 50
                     ?>
                 <tr>
                     <td><?php echo $i ?></td>
-                    <td><?php echo $row['title'] ?></td>
-                    <td><?php echo $row['director'] ?></td>
-                    <td><?php echo $row['rating'] ?></td>
+                    <td><?php echo $row['name'] ?></td>
                     <td><?php echo '$'.$row['price'] ?></td>
-                    <td>
-                        <form method="get" action="movieDetail_Book.php">
-                            <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
-                            <input type="submit" value="Details">
-                        </form>
-                    </td>
                 </tr>
                 <?php } ?>
             </table>
