@@ -38,6 +38,7 @@ general terminal
                         if (isset($_SESSION['status']) && $_SESSION['status']==true){
                             echo '<li>'.$_SESSION['loginUser'].'</li>';
                             echo '<li><a href="logoutProcess.php">Log Out</a></li>';
+                            echo '<li><a href="checkReservation.php">Check Orders</a></li>';
                         }else{
                             echo '<li><a href="login.php">Login</a></li>';
                             echo '<li><a href="signUp.php">Sign Up</a></li>';

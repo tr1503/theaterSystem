@@ -141,7 +141,7 @@ user - choose screening
             total_bill = $(".your_selected_seat").length * pricePerTicked;
             $('#total > span').html(total_bill);
         });
-        */
-    });
+        
+    });*/
 </script>
 </html>

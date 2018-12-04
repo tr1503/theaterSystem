@@ -56,7 +56,7 @@ user - order confirm
                     <td>End time: <?php echo $scrRow['end_time'] ?></td>
                 </tr>
                 <tr>
-                    <td>Total price: <?php $i=count($seatId);$price = $i*$moviePrice; echo $price; ?></td>
+                    <td>Total price: <?php $i=count($seatId);$price = $i * $moviePrice; echo $price; ?></td>
                 </tr>
             </table>
             <form method="post" action="processReservation.php">
