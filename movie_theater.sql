@@ -1,24 +1,74 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8.2
--- http://www.phpmyadmin.net
+-- version 4.4.15.9
+-- https://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2018 at 04:14 PM
--- Server version: 5.7.11-log
--- PHP Version: 5.6.30
+-- Generation Time: Dec 04, 2018 at 08:36 PM
+-- Server version: 5.6.37
+-- PHP Version: 5.6.31
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `movie_theater`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `movieMarket`(IN `title` VARCHAR(50))
+    NO SQL
+BEGIN
+	SELECT movie.id, movie.title, (COUNT(*) * movie.price) AS market
+    FROM movie JOIN screening ON movie.id = screening.movie_id JOIN seat_reserve ON seat_reserve.scr_id = screening.id
+    WHERE movie.title = title
+    GROUP BY movie.id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `searchFreeTime`(IN `startTime` DATETIME, IN `aud` INT)
+    NO SQL
+BEGIN
+	SELECT * 
+    FROM screening 
+    WHERE startTime = screening.start_time AND aud = screening.aud_id; 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `showOrder`(IN `aud` INT)
+    NO SQL
+BEGIN
+	SELECT reservation.id, user.name, reservation.movie_payment 
+    FROM reservation JOIN screening ON reservation.scr_id = screening.id JOIN user_reserve ON user_reserve.reserve_id = reservation.id JOIN user ON user.id = user_reserve.user_id 
+    WHERE screening.aud_id = aud AND reservation.paid = 0;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `showUserOrder`(IN `userId` INT)
+    NO SQL
+BEGIN
+	SELECT reservation.id, movie.title, screening.start_time, screening.end_time, reservation.paid 
+    FROM user_reserve JOIN reservation ON user_reserve.reserve_id = reservation.id JOIN screening ON reservation.scr_id = screening.id JOIN movie ON screening.movie_id = movie.id 
+    WHERE user_reserve.user_id = userId
+    ORDER BY screening.start_time DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `topMovie`(IN `num` INT)
+    NO SQL
+BEGIN
+	SELECT movie.id, movie.title, COUNT(*) AS reserve
+    FROM movie JOIN screening ON movie.id = screening.movie_id JOIN seat_reserve ON seat_reserve.scr_id = screening.id
+    GROUP BY movie.id
+    ORDER BY COUNT(*) DESC
+    LIMIT num;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -27,11 +77,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `auditorium` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `seats_no` int(3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+  `seats_no` int(3) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `auditorium`
@@ -51,13 +100,19 @@ INSERT INTO `auditorium` (`id`, `name`, `seats_no`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `employee` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `name` varchar(15) NOT NULL,
   `password` varchar(10) NOT NULL,
-  `aud_id` int(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `aud_id` (`aud_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `aud_id` int(5) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `employee`
+--
+
+INSERT INTO `employee` (`id`, `name`, `password`, `aud_id`) VALUES
+(1, 'hay55', 'Aq010101', 2),
+(2, 'hye3', 'Aq010101', 1);
 
 -- --------------------------------------------------------
 
@@ -66,11 +121,10 @@ CREATE TABLE IF NOT EXISTS `employee` (
 --
 
 CREATE TABLE IF NOT EXISTS `merchandise` (
-  `id` int(2) NOT NULL AUTO_INCREMENT,
+  `id` int(2) NOT NULL,
   `name` varchar(10) NOT NULL,
-  `price` int(3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+  `price` int(3) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `merchandise`
@@ -89,18 +143,14 @@ INSERT INTO `merchandise` (`id`, `name`, `price`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `merchandise_order` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `user_id` int(5) NOT NULL,
   `merchandise_id` int(2) DEFAULT NULL,
   `reserve_id` int(5) NOT NULL,
   `amount` int(3) NOT NULL DEFAULT '0',
   `price` double NOT NULL,
-  `order_time` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `merchandise_id` (`merchandise_id`),
-  KEY `user_id` (`user_id`),
-  KEY `reserve_id` (`reserve_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `order_time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -109,13 +159,12 @@ CREATE TABLE IF NOT EXISTS `merchandise_order` (
 --
 
 CREATE TABLE IF NOT EXISTS `movie` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `title` varchar(50) NOT NULL,
   `director` varchar(20) NOT NULL,
   `rating` double NOT NULL,
-  `price` double NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=109 ;
+  `price` double NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `movie`
@@ -171,7 +220,8 @@ INSERT INTO `movie` (`id`, `title`, `director`, `rating`, `price`) VALUES
 (105, 'The Lion King', 'Roger Allers', 8.5, 12),
 (106, 'The Prestige', 'Christopher Nolan', 8.5, 12),
 (107, 'Apocalypse Now', 'Francis Ford Coppola', 8.4, 12),
-(108, 'Memento', 'Christopher Nolan', 8.4, 12);
+(108, 'Memento', 'Christopher Nolan', 8.4, 12),
+(109, 'movie1', 'test', 7.1, 12);
 
 -- --------------------------------------------------------
 
@@ -180,14 +230,12 @@ INSERT INTO `movie` (`id`, `title`, `director`, `rating`, `price`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `reservation` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `scr_id` int(5) NOT NULL,
   `movie_payment` double NOT NULL,
   `paid` tinyint(1) NOT NULL,
-  `reserve_time` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `scr_id` (`scr_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+  `reserve_time` datetime NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `reservation`
@@ -211,8 +259,16 @@ INSERT INTO `reservation` (`id`, `scr_id`, `movie_payment`, `paid`, `reserve_tim
 (15, 20, 30, 0, '2018-12-03 15:55:36'),
 (16, 20, 30, 0, '2018-12-03 15:56:52'),
 (17, 20, 20, 0, '2018-12-03 15:57:41'),
-(18, 1, 10, 0, '2018-12-03 16:01:37'),
-(19, 1, 10, 0, '2018-12-03 16:01:45');
+(18, 1, 10, 1, '2018-12-03 16:01:37'),
+(19, 1, 10, 0, '2018-12-03 16:01:45'),
+(20, 15, 20, 0, '2018-12-03 21:36:50'),
+(21, 9, 10, 0, '2018-12-03 21:45:50'),
+(22, 5, 20, 1, '2018-12-03 22:23:27'),
+(24, 18, 30, 1, '2018-12-03 22:42:14'),
+(25, 14, 20, 1, '2018-12-04 01:55:39'),
+(26, 29, 20, 0, '2018-12-04 02:04:27'),
+(27, 26, 10, 0, '2018-12-04 14:05:23'),
+(28, 11, 30, 0, '2018-12-04 20:03:44');
 
 -- --------------------------------------------------------
 
@@ -221,15 +277,12 @@ INSERT INTO `reservation` (`id`, `scr_id`, `movie_payment`, `paid`, `reserve_tim
 --
 
 CREATE TABLE IF NOT EXISTS `screening` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `movie_id` int(5) DEFAULT NULL,
   `aud_id` int(5) DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `movie_id` (`movie_id`),
-  KEY `aud_id` (`aud_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+  `end_time` datetime DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `screening`
@@ -305,7 +358,8 @@ INSERT INTO `screening` (`id`, `movie_id`, `aud_id`, `start_time`, `end_time`) V
 (67, 105, 1, '2018-12-21 14:00:00', '2018-12-21 16:30:00'),
 (68, 106, 1, '2018-12-22 14:00:00', '2018-12-22 16:30:00'),
 (69, 107, 1, '2018-12-23 14:00:00', '2018-12-23 16:30:00'),
-(70, 108, 1, '2018-12-24 14:00:00', '2018-12-24 16:30:00');
+(70, 108, 1, '2018-12-24 14:00:00', '2018-12-24 16:30:00'),
+(71, 60, 1, '2018-12-04 09:00:00', '2018-12-04 11:00:00');
 
 -- --------------------------------------------------------
 
@@ -314,13 +368,11 @@ INSERT INTO `screening` (`id`, `movie_id`, `aud_id`, `start_time`, `end_time`) V
 --
 
 CREATE TABLE IF NOT EXISTS `seat` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `row` int(2) NOT NULL,
   `number` int(2) NOT NULL,
-  `aud_id` int(5) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `aud_id` (`aud_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=211 ;
+  `aud_id` int(5) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `seat`
@@ -545,16 +597,11 @@ INSERT INTO `seat` (`id`, `row`, `number`, `aud_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `seat_reserve` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `reserve_id` int(5) NOT NULL,
   `seat_id` int(5) NOT NULL,
-  `scr_id` int(5) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `scr_id_2` (`scr_id`,`seat_id`),
-  KEY `reserve_id` (`reserve_id`),
-  KEY `seat_id` (`seat_id`),
-  KEY `scr_id` (`scr_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+  `scr_id` int(5) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `seat_reserve`
@@ -566,7 +613,23 @@ INSERT INTO `seat_reserve` (`id`, `reserve_id`, `seat_id`, `scr_id`) VALUES
 (9, 16, 123, 20),
 (10, 17, 139, 20),
 (11, 17, 140, 20),
-(12, 18, 1, 1);
+(12, 18, 1, 1),
+(14, 20, 129, 15),
+(15, 20, 130, 15),
+(16, 21, 141, 9),
+(17, 22, 74, 5),
+(18, 22, 84, 5),
+(19, 24, 95, 18),
+(20, 24, 96, 18),
+(21, 24, 97, 18),
+(22, 25, 105, 14),
+(23, 25, 106, 14),
+(24, 26, 46, 29),
+(25, 26, 47, 29),
+(26, 27, 37, 26),
+(27, 28, 34, 11),
+(28, 28, 35, 11),
+(29, 28, 36, 11);
 
 -- --------------------------------------------------------
 
@@ -575,12 +638,11 @@ INSERT INTO `seat_reserve` (`id`, `reserve_id`, `seat_id`, `scr_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `name` varchar(15) NOT NULL,
   `password` varchar(10) NOT NULL,
-  `phone` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+  `phone` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user`
@@ -589,7 +651,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `name`, `password`, `phone`) VALUES
 (1, 'text', '00000', '0000000000'),
 (2, 'test1', '000000', ''),
-(3, 'test2', 'test2', '');
+(3, 'test2', 'test2', ''),
+(4, 'tr1503', 'Aq010101', '6462438050');
 
 -- --------------------------------------------------------
 
@@ -598,13 +661,10 @@ INSERT INTO `user` (`id`, `name`, `password`, `phone`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user_reserve` (
-  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL,
   `user_id` int(5) DEFAULT NULL,
-  `reserve_id` int(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `reserve_id` (`reserve_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+  `reserve_id` int(5) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user_reserve`
@@ -627,8 +687,159 @@ INSERT INTO `user_reserve` (`id`, `user_id`, `reserve_id`) VALUES
 (14, 1, 16),
 (15, 1, 17),
 (16, 1, 18),
-(17, 1, 19);
+(17, 1, 19),
+(18, 4, 20),
+(19, 4, 21),
+(20, 4, 22),
+(22, 4, 24),
+(23, 4, 25),
+(24, 4, 26),
+(25, 4, 27),
+(26, 4, 28);
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `auditorium`
+--
+ALTER TABLE `auditorium`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employee`
+--
+ALTER TABLE `employee`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `aud_id` (`aud_id`);
+
+--
+-- Indexes for table `merchandise`
+--
+ALTER TABLE `merchandise`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `merchandise_order`
+--
+ALTER TABLE `merchandise_order`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `merchandise_id` (`merchandise_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `reserve_id` (`reserve_id`);
+
+--
+-- Indexes for table `movie`
+--
+ALTER TABLE `movie`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reservation`
+--
+ALTER TABLE `reservation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `scr_id` (`scr_id`);
+
+--
+-- Indexes for table `screening`
+--
+ALTER TABLE `screening`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `movie_id` (`movie_id`),
+  ADD KEY `aud_id` (`aud_id`);
+
+--
+-- Indexes for table `seat`
+--
+ALTER TABLE `seat`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `aud_id` (`aud_id`);
+
+--
+-- Indexes for table `seat_reserve`
+--
+ALTER TABLE `seat_reserve`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `scr_id_2` (`scr_id`,`seat_id`),
+  ADD KEY `reserve_id` (`reserve_id`),
+  ADD KEY `seat_id` (`seat_id`),
+  ADD KEY `scr_id` (`scr_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_reserve`
+--
+ALTER TABLE `user_reserve`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `reserve_id` (`reserve_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `auditorium`
+--
+ALTER TABLE `auditorium`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `merchandise`
+--
+ALTER TABLE `merchandise`
+  MODIFY `id` int(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `merchandise_order`
+--
+ALTER TABLE `merchandise_order`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `movie`
+--
+ALTER TABLE `movie`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=110;
+--
+-- AUTO_INCREMENT for table `reservation`
+--
+ALTER TABLE `reservation`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
+--
+-- AUTO_INCREMENT for table `screening`
+--
+ALTER TABLE `screening`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
+--
+-- AUTO_INCREMENT for table `seat`
+--
+ALTER TABLE `seat`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=211;
+--
+-- AUTO_INCREMENT for table `seat_reserve`
+--
+ALTER TABLE `seat_reserve`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `user_reserve`
+--
+ALTER TABLE `user_reserve`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
 --
 -- Constraints for dumped tables
 --

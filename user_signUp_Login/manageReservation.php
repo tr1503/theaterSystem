@@ -51,6 +51,7 @@
         <table class="table">
             <tr>
                 <th>Reservation ID</th>
+                <th>User Name</th>
                 <th>Payment</th>
                 <th></th>
             </tr>
@@ -59,7 +60,8 @@
             ?>
             <tr>
                 <td><?php echo $row['id'] ?></td>
-                <td><?php echo $row['movie_payment'] ?></td>
+                <td><?php echo $row['name'] ?></td>
+                <td><?php echo "$".$row['movie_payment'] ?></td>
                 <td>
                     <form method="get" action="processPaid.php">
                         <input type="hidden" name="id" value="<?php echo $row['id']?>">

@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <!--
-general - merchandise list
+user - merchandise
 -->
 <html>
     <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <meta charset="UTF-8">
         <title>HYZtheater</title>
-        <?php 
-        require_once 'dbConnect.php';
-        dbConnect();
+        <?php
+            //check login status, otherwise lead to login page
+            session_start();
+            if (isset($_SESSION['status']) && $_SESSION['status']==true){
+                require_once 'dbConnect.php';
+                dbConnect();
+            }else{                
+                echo '<script>alert("Please login firstly."); window.location.href="./book_login.php";</script>';
+            }
         ?>
     </head>
     <body>
@@ -22,9 +28,6 @@ general - merchandise list
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <?php
-                        //access to superglobal session, in other words check is there any logined user
-                        session_start(); 
-                        //if there is a login user display username, otherwise show login link
                         if ($_SESSION['status']==true){
                             echo '<li class="nav-item active"><a class="nav-link" href="checkReservation.php">'.$_SESSION['loginUser'].'</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="logoutProcess.php">Log Out</a></li>';
@@ -41,27 +44,48 @@ general - merchandise list
                     <input type="submit" class="btn btn-outline-success my-2 my-sm-0" value="search">
                 </form>
             </div>
-        </nav>
-        <div id="merList" class="container">
+        </nav> 
+        <div id="merchandiseList" class="container">
             <?php
             $sql = "SELECT * FROM merchandise";
             $result = mysql_query($sql);
+            $res_id = $_GET['res_id'];
+            $user_id = $_GET['user_id'];
+            //echo $res_id.$user_id;
             ?>
+            <form method="post" action="confirmMerchandise.php">
             <table class="table">
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
+                    <th>Amount</th>
                 </tr>
                 <?php 
+                $i = 0;
                 while($row = mysql_fetch_array($result)){ 
                     ?>
                 <tr>
                     <td><?php echo $row['name'] ?></td>
                     <td><?php echo '$'.$row['price'] ?></td>
+                    <td>
+                        <select name="amount" class="form-control">
+                            <option value ="0" selected>0</option>
+                            <option value ="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </td>
                 </tr>
-                <?php } ?>
-            </table>
-        </div> 
+                <input type="hidden" name="merchandise_id" value="<?php echo $row['id'] ?>">                
+                <?php 
+                    } 
+                ?>
+            </table>            
+            <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+            <input type="hidden" name="reserve_id" value="<?php echo $res_id ?>">
+            <input type="submit" class="btn btn-success" value="Buy">
+            </form>
+        </div>
         <div id="return">
             <input type='button' class="btn btn-primary" value='Return' onclick='history.go(-1)'>
         </div>
