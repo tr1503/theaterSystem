@@ -26,7 +26,7 @@ general - movie list 50
                         session_start(); 
                         //if there is a login user display username, otherwise show login link
                         if ($_SESSION['status']==true){
-                            echo '<li class="nav-item active"><a class="nav-link" href="#">'.$_SESSION['loginUser'].'</a></li>';
+                            echo '<li class="nav-item active"><a class="nav-link" href="checkOrder.php">'.$_SESSION['loginUser'].'</a></li>';
                             echo '<li class="nav-item active"><a class="nav-link" href="logoutProcess.php">Log Out</a></li>';
                         }else{
                             echo '<li class="nav-item active"><a class="nav-link" href="login.php">Login</a></li>';
