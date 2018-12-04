@@ -23,6 +23,21 @@
         }
         mysql_free_result($result);
         mysql_close($conn);
+
+        $server = 'localhost';
+        $username = 'root';
+        $password = 'mysql';
+        $database = 'movie_theater';    
+        //start connection, use database 'movie_theater'
+        $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
+        mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
+        $sql = "CALL showOrder('$aud_id')";
+        $notify = mysql_query($sql);
+        if (mysql_num_rows($notify) != 0) {
+            echo '<div class="alert alert-warning" role="alert">Some order need to process paid.<a href="manageReservation.php?audId='.$aud_id.'" class="alert-link">Click here to work</a></div>';
+        }
+        mysql_free_result($notify);
+        mysql_close($conn);
     ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="empolyeeHome.php">Dashboard</a>
@@ -47,7 +62,6 @@
                         <a class="dropdown-item" href="addMovie.php">Add new movies</a>
                         <a class="dropdown-item" href="manageMerchandise.php">Manage merchandise</a>
                         <a class="dropdown-item" href="auditoriumList.php">Manage screening</a>
-                        <a class="dropdown-item" href="manageReservation.php?audId=<?php echo $aud_id?>">Manage Reservation</a>
                     </div>
                 </li>
             </ul>
@@ -66,10 +80,11 @@
         //start connection, use database 'movie_theater'
         $conn = mysql_connect($server,$username,$password) or die("Connection failed: ".  mysql_error());
         mysql_select_db($database,$conn) or die("Connection failed: ".  mysql_error());
-        $sql = "CALL topMovie()";
+        $sql = "CALL topMovie(10)";
         $top = mysql_query($sql);
     ?>
     <div id="topMovies" class="container">
+        <h3 class="text-center">Top 10 Popular Movies</h3>
         <table class="table">
             <tr>
                 <th>Movie</th>
